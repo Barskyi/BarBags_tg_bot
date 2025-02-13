@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Замовлення</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            position: relative;
+            overflow: hidden;
+            font-size: 13px;
+        }
+
+        .bubble {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 15px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .step {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateX(10px);
+        }
+
+        .step b {
+            color: #2c3e50;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .contact {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 12px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 12px;
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .benefit-item {
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            min-height: 40px;
+        }
+
+        .icon {
+            font-size: 16px;
+            color: #4ecdc4;
+            flex-shrink: 0;
+        }
+
+        ul {
+            margin: 4px 0;
+        }
+
+        li {
+            margin: 2px 0;
+            line-height: 1.4;
+        }
+
+        @media (max-height: 700px) {
+            body {
+                padding: 5px;
+                font-size: 12px;
+            }
+
+            .container {
+                padding: 12px;
+            }
+
+            .step {
+                margin-bottom: 8px;
+                padding: 8px;
+            }
+
+            .note {
+                margin: 8px 0;
+                padding: 8px;
+            }
+
+            .benefits {
+                gap: 6px;
+            }
+
+            .benefit-item {
+                padding: 6px;
+                min-height: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createBubbles() {
+            const body = document.querySelector('body');
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.width = `${Math.random() * 100 + 20}px`;
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDelay = `${Math.random() * 8}s`;
+                body.appendChild(bubble);
+            }
+        }
+        createBubbles();
+    </script>
+
+    <div class="container">
+        <h1>✨ Як оформити замовлення?</h1>
+
+        <div class="step">
+            <b>1️⃣ Напишіть менеджеру</b>
+            <a href="https://t.me/barska_olena" class="contact">@barska_olena</a>
+        </div>
+
+        <div class="step">
+            <b>2️⃣ Надішліть передоплату</b>
+            200 грн, решту можна оплатити накладним платежем
+        </div>
+
+        <div class="step">
+            <b>3️⃣ Надайте дані для відправки</b>
+            <ul style="list-style: none; padding-left: 12px;">
+                <li>📝 ПІБ</li>
+                <li>📱 Контактний номер телефону</li>
+                <li>📍 Адреса доставки (НП/інша служба)</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <b>🚚 Зверніть увагу:</b>
+            <p>Ми налаштували автоповернення посилок на 6-й день, тому забирайте свої посилочки вчасно! 🫶🏻</p>
+        </div>
+
+        <div class="benefits">
+            <div class="benefit-item">
+                <i class="fas fa-box icon"></i>
+                <span>Є в наявності</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-tshirt icon"></i>
+                <span>Підбір розміру</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-shipping-fast icon"></i>
+                <span>Швидка доставка</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-heart icon"></i>
+                <span>Просте замовлення</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

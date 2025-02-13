@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "tgbot-1"
+version = "0.1.0"
+description = ""
+authors = ["Barskyi <barskyi69@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aiogram = "^3.17.0"
+python-dotenv = "^1.0.1"
+asyncio = "^3.4.3"
+sqlalchemy = "^2.0.37"
+asyncpg = "^0.30.0"
+alembic = "^1.14.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
