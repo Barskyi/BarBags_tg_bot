@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, JSON
+from sqlalchemy import Column, Integer, String, DateTime, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
 from database.connect import engine
 
@@ -12,7 +12,7 @@ class UserAction(Base):
     __tablename__ = "user_actions"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, nullable=False)
+    user_id = Column(BigInteger, nullable=False)
     username = Column(String)
     action_type = Column(String, nullable=False)
     button_name = Column(String)
