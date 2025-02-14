@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 from dotenv import load_dotenv
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -13,10 +17,13 @@ class Config:
     @property
     def database_url(self) -> str:
         if self.DATABASE_URL:
+            logger.info(
+                f"Using DATABASE_URL from environment: {self.DATABASE_URL[:15]}...")  # логуємо лише початок URL для безпеки
             if self.DATABASE_URL.startswith("postgres://"):
                 return self.DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
             return self.DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
+        logger.warning("DATABASE_URL not found, using fallback configuration")
         # Fallback для локальної розробки
         db_user = os.getenv('DB_USER', 'postgres')
         db_pass = os.getenv('DB_PASS', '')
