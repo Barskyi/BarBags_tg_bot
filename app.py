@@ -5,6 +5,7 @@ from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
 
 from config.settings import config
+from database.models import init_models
 from handlers.admin import management
 from handlers.user import start, catalog
 from middleware.moderator import ModeratorMiddleware
@@ -17,26 +18,30 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
-    """Configuration"""
-
-    """Initialize"""
+    # Створюємо бота за межами try-except
     bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp = Dispatcher()
-
-    """Add middleware"""
-    dp.message.middleware(ModeratorMiddleware())
-
-    """Router registered"""
-    dp.include_router(start.router)
-    dp.include_router(catalog.router)
-    dp.include_router(management.router)
 
     try:
+        logger.info("Ініціалізація бази даних...")
+        await init_models()
+        logger.info("База даних успішно ініціалізована")
+
+        dp = Dispatcher()
+
+        """Add middleware"""
+        dp.message.middleware(ModeratorMiddleware())
+
+        """Router registered"""
+        dp.include_router(start.router)
+        dp.include_router(catalog.router)
+        dp.include_router(management.router)
+
         logger.info("Бот запущено")
         await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot)
     except Exception as e:
-        logger.error(f"Помилка при запуску бота: {e}")
+        logger.error(f"Критична помилка: {e}")
+        raise
     finally:
         await bot.session.close()
 

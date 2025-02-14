@@ -1,9 +1,10 @@
+import logging
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, JSON
 from sqlalchemy.ext.declarative import declarative_base
-
 from database.connect import engine
 
+logger = logging.getLogger(__name__)
 Base = declarative_base()
 
 
@@ -21,5 +22,11 @@ class UserAction(Base):
 
 async def init_models():
     """Створення таблиць при запуску"""
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    try:
+        logger.info("Starting database initialization...")
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables created successfully!")
+    except Exception as e:
+        logger.error(f"Error creating database tables: {e}")
+        raise
