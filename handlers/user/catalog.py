@@ -48,21 +48,18 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
     """Обробка всіх callback кнопок"""
     try:
         async with async_session() as session:
+            user = callback.from_user
+            user_identifier = user.username or f"{user.first_name} {user.last_name or ''}".strip() or f"user_{user.id}"
+
             action = UserAction(
                 user_id=callback.from_user.id,
-                username=callback.from_user.username,
+                username=user_identifier,
                 action_type="button_click",
                 button_name=callback.data,
                 message_id=callback.message.message_id
             )
             session.add(action)
             await session.commit()
-        # if callback.data == "show_catalog":
-        #     await safe_edit_message(
-        #         callback.message,
-        #         text="Оберіть потрібну категорію:\n👇",
-        #         reply_markup=catalog_keyboard()
-        #     )
         if callback.data == "show_catalog":
             if await check_subscription(bot, callback.from_user.id):
                 await safe_edit_message(
