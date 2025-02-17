@@ -13,7 +13,7 @@ async def start_cmd(message: Message):
     join_button = InlineKeyboardMarkup(inline_keyboard=[[
         InlineKeyboardButton(
             text="📢 Приєднатися до каналу",
-            url="https://t.me/barbags_shop"
+            url="https://t.me/BarBags_shop"
         )
     ]])
 
