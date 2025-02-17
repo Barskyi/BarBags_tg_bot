@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from aiogram import Router, F
 from aiogram.exceptions import TelegramBadRequest
@@ -60,28 +61,71 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
             )
             session.add(action)
             await session.commit()
+
         if callback.data == "show_catalog":
-            if await check_subscription(bot, callback.from_user.id):
-                await safe_edit_message(
-                    callback.message,
-                    text="Оберіть потрібну категорію:\n👇",
-                    reply_markup=catalog_keyboard()
-                )
+            is_subscribed = await check_subscription(bot, callback.from_user.id)
+
+            if is_subscribed:
+                try:
+                    await safe_edit_message(
+                        callback.message,
+                        text="Оберіть потрібну категорію:\n👇",
+                        reply_markup=catalog_keyboard()
+                    )
+                except Exception as e:
+                    logging.error(f"Error in handle_catalog_callback: {e}\n{traceback.format_exc()}")
+                    await callback.message.answer(
+                        text="Оберіть потрібну категорію:\n👇",
+                        reply_markup=catalog_keyboard()
+                    )
             else:
                 keyboard = InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME}")],
-                    [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")]
+                    [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
+                    [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
                 ])
-                await callback.message.answer(
-                    "Щоб переглянути каталог, необхідно підписатися на наш канал!", reply_markup=keyboard
-                )
+                try:
+                    await safe_edit_message(
+                        callback.message,
+                        text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
+                        reply_markup=keyboard
+                    )
+                except Exception as e:
+                    await callback.message.answer(
+                        text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
+                        reply_markup=keyboard
+                    )
 
         elif callback.data == "check_subscription":
             if await check_subscription(bot, callback.from_user.id):
-                await callback.message.answer("✅ Ви підписані! Ось каталог:", reply_markup=catalog_keyboard())
+                try:
+                    await safe_edit_message(
+                        callback.message,
+                        text="✅ Ви підписані! Ось каталог:",
+                        reply_markup=catalog_keyboard()
+                    )
+                except Exception as e:
+                    await callback.message.answer(
+                        text="✅ Ви підписані! Ось каталог:",
+                        reply_markup=catalog_keyboard()
+                    )
             else:
-                await callback.message.answer("❌ Ви ще не підписані. Будь ласка, підпишіться та спробуйте знову.")
-
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME}")],
+                    [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
+                    [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
+                ])
+                try:
+                    await safe_edit_message(
+                        callback.message,
+                        text="❌ Ви ще не підписані. Будь ласка, підпишіться та спробуйте знову.",
+                        reply_markup=keyboard
+                    )
+                except Exception as e:
+                    await callback.message.answer(
+                        text="❌ Ви ще не підписані. Будь ласка, підпишіться та спробуйте знову.",
+                        reply_markup=keyboard
+                    )
         elif callback.data == "main_menu":
             await safe_edit_message(
                 callback.message,
