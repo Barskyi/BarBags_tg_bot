@@ -2,14 +2,26 @@ import logging
 
 from aiogram import Router, F
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from database.connect import async_session
 from database.models import UserAction
 from keyboards.inline import main_menu_keyboard, catalog_keyboard, faq_keyboard, wallets_keyboard
-from utils.smt_texts import about_text, contact_info, faq_texts
+from utils.smt_texts import about_text, faq_texts
 from utils.smt_texts import welcome_text
 
 router = Router()
+
+CHANNEL_USERNAME = "@BarBags_shop"
+
+
+async def check_subscription(bot, user_id: int) -> bool:
+    """Перевіряє, чи користувач підписаний на канал."""
+    try:
+        chat_member = await bot.get_chat_member(CHANNEL_USERNAME, user_id)
+        return chat_member.status in ("member", "administrator", "creator")
+    except Exception as e:
+        logging.error(f"Помилка при перевірці підписки: {e}")
+        return False
 
 
 async def safe_edit_message(message, **kwargs):
@@ -32,7 +44,7 @@ async def safe_edit_message(message, **kwargs):
 
 
 @router.callback_query(F.data)
-async def handle_catalog_callback(callback: CallbackQuery):
+async def handle_catalog_callback(callback: CallbackQuery, bot):
     """Обробка всіх callback кнопок"""
     try:
         async with async_session() as session:
@@ -45,12 +57,33 @@ async def handle_catalog_callback(callback: CallbackQuery):
             )
             session.add(action)
             await session.commit()
+        # if callback.data == "show_catalog":
+        #     await safe_edit_message(
+        #         callback.message,
+        #         text="Оберіть потрібну категорію:\n👇",
+        #         reply_markup=catalog_keyboard()
+        #     )
         if callback.data == "show_catalog":
-            await safe_edit_message(
-                callback.message,
-                text="Оберіть потрібну категорію:\n👇",
-                reply_markup=catalog_keyboard()
-            )
+            if await check_subscription(bot, callback.from_user.id):
+                await safe_edit_message(
+                    callback.message,
+                    text="Оберіть потрібну категорію:\n👇",
+                    reply_markup=catalog_keyboard()
+                )
+            else:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME}")],
+                    [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")]
+                ])
+                await callback.message.answer(
+                    "Щоб переглянути каталог, необхідно підписатися на наш канал!", reply_markup=keyboard
+                )
+
+        elif callback.data == "check_subscription":
+            if await check_subscription(bot, callback.from_user.id):
+                await callback.message.answer("✅ Ви підписані! Ось каталог:", reply_markup=catalog_keyboard())
+            else:
+                await callback.message.answer("❌ Ви ще не підписані. Будь ласка, підпишіться та спробуйте знову.")
 
         elif callback.data == "main_menu":
             await safe_edit_message(
