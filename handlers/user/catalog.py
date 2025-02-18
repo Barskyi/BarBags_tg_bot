@@ -96,8 +96,32 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
                         reply_markup=get_subscription_keyboard()
                     )
         elif callback.data == "subscribe_to_channel":
-            # Обробка натискання кнопки підписки
-            await callback.answer("Підпишіться на канал, щоб отримати доступ до каталогу")
+            try:
+                # Спроба підписати користувача на канал
+                await bot.invite_chat_member(
+                    chat_id=CHANNEL_ID,
+                    user_id=callback.from_user.id
+                )
+                # Перевіряємо чи підписався
+                is_subscribed = await check_subscription(bot, callback.from_user.id)
+                if is_subscribed:
+                    await safe_edit_message(
+                        callback.message,
+                        text="✅ Ви успішно підписані! Ось каталог:",
+                        reply_markup=catalog_keyboard()
+                    )
+                else:
+                    await safe_edit_message(
+                        callback.message,
+                        text="❌ Не вдалося підписатися автоматично. Спробуйте ще раз.",
+                        reply_markup=get_subscription_keyboard()
+                    )
+            except Exception as e:
+                await log_error(e, "subscribe_to_channel", callback.from_user.id)
+                await callback.message.answer(
+                    text="Виникла помилка при підписці. Спробуйте ще раз або підпишіться вручну.",
+                    reply_markup=get_subscription_keyboard()
+                )
 
             # keyboard = InlineKeyboardMarkup(inline_keyboard=[
             #     [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
