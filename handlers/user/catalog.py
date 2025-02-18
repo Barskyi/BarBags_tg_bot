@@ -160,7 +160,6 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
             except Exception as e:
                 await log_error(e, "show_wallets", user_id)
 
-        # Відповідаємо на callback щоб прибрати годинник
         try:
             await callback.answer()
         except Exception as e:
