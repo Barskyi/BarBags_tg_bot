@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, KeyboardButtonRequestChat
 from database.connect import async_session
 from database.models import UserAction
 from keyboards.inline import main_menu_keyboard, catalog_keyboard, faq_keyboard, wallets_keyboard
@@ -9,6 +9,26 @@ from exceptions.error_handler import log_error, safe_edit_message
 router = Router()
 
 CHANNEL_USERNAME = "@BarBags_shop"
+CHANNEL_ID = -1002403545636
+
+
+def get_subscription_keyboard():
+    """Створює клавіатуру з кнопкою підписки"""
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text="🔔 Підписатися",
+                callback_data="subscribe_to_channel",
+                request_chat=KeyboardButtonRequestChat(
+                    request_id=1,
+                    chat_is_channel=True,
+                    chat_id=CHANNEL_ID
+                )
+            )
+        ],
+        [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
+        [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
+    ])
 
 
 async def check_subscription(bot, user_id: int) -> bool:
@@ -63,23 +83,39 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
                         reply_markup=catalog_keyboard()
                     )
             else:
-                keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                    [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
-                    [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
-                    [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
-                ])
                 try:
                     await safe_edit_message(
                         callback.message,
                         text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
-                        reply_markup=keyboard
+                        reply_markup=get_subscription_keyboard()
                     )
                 except Exception as e:
                     await log_error(e, "show_catalog - unsubscribed user", user_id)
                     await callback.message.answer(
                         text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
-                        reply_markup=keyboard
+                        reply_markup=get_subscription_keyboard()
                     )
+        elif callback.data == "subscribe_to_channel":
+            # Обробка натискання кнопки підписки
+            await callback.answer("Підпишіться на канал, щоб отримати доступ до каталогу")
+
+            # keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            #     [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
+            #     [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
+            #     [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
+            # ])
+            # try:
+            #     await safe_edit_message(
+            #         callback.message,
+            #         text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
+            #         reply_markup=keyboard
+            #     )
+            # except Exception as e:
+            #     await log_error(e, "show_catalog - unsubscribed user", user_id)
+            #     await callback.message.answer(
+            #         text="Щоб переглянути каталог, необхідно підписатися на наш канал!",
+            #         reply_markup=keyboard
+            #     )
 
         elif callback.data == "check_subscription":
             try:
@@ -91,15 +127,15 @@ async def handle_catalog_callback(callback: CallbackQuery, bot):
                         reply_markup=catalog_keyboard()
                     )
                 else:
-                    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                        [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
-                        [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
-                        [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
-                    ])
+                    # keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    #     [InlineKeyboardButton(text="🔔 Підписатися", url=f"https://t.me/{CHANNEL_USERNAME[1:]}")],
+                    #     [InlineKeyboardButton(text="✅ Перевірити", callback_data="check_subscription")],
+                    #     [InlineKeyboardButton(text="↩️ Головне меню", callback_data="main_menu")]
+                    # ])
                     await safe_edit_message(
                         callback.message,
                         text="❌ Ви ще не підписані. Будь ласка, підпишіться та спробуйте знову.",
-                        reply_markup=keyboard
+                        reply_markup=get_subscription_keyboard()
                     )
             except Exception as e:
                 await log_error(e, "check_subscription callback", user_id)
