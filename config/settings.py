@@ -13,6 +13,7 @@ load_dotenv()
 class Config:
     BOT_TOKEN: str = os.getenv('BOT_TOKEN', '')
     DATABASE_URL: str = os.getenv('DATABASE_URL', '')
+    CHANNEL_IDS = [int(ch_id) for ch_id in os.getenv("CHANNEL_IDS", "").split(",") if ch_id.strip().isdigit()]
 
     @property
     def database_url(self) -> str:

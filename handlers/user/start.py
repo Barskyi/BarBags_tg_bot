@@ -1,18 +1,18 @@
-import os
-
 from aiogram import Router, Bot, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+
+from config.settings import config, logger
 from keyboards.inline import main_menu_keyboard
 from utils.smt_texts import welcome_text
 
 router = Router()
 
-BOT_TOKEN = os.getenv("BOT_TOKEN", "")
-CHANNEL_ID = int(os.getenv("CHANNEL_ID", "0"))
+# BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+# CHANNEL_IDS = [int(ch_id) for ch_id in os.getenv("CHANNEL_IDS", "").split(",") if ch_id.strip().isdigit()]
 
-if not BOT_TOKEN:
-    raise ValueError("BOT_TOKEN не знайдено! Переконайтесь, що .env файл містить BOT_TOKEN")
+# if not BOT_TOKEN:
+#     raise ValueError("BOT_TOKEN не знайдено! Переконайтесь, що .env файл містить BOT_TOKEN")
 
 
 @router.message(CommandStart())
@@ -27,15 +27,29 @@ async def start_cmd(message: Message):
 
 async def pin_webapp_menu():
     """Закріплення повідомлення з веб-додатком у каналі"""
-    bot = Bot(token=BOT_TOKEN)
-    msg = await bot.send_message(
-        chat_id=CHANNEL_ID,
-        text="🛒 Для замовлення натисніть кнопку нижче 👇",
-        reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
-            [types.InlineKeyboardButton(
-                text="🛍 Відкрити каталог",
-                web_app=types.WebAppInfo(url="https://barskyi.github.io/for_order.html")
-            )]
-        ])
-    )
-    await bot.pin_chat_message(chat_id=CHANNEL_ID, message_id=msg.message_id)
+    bot = Bot(token=config.BOT_TOKEN)
+    channel_ids = config.CHANNEL_IDS
+
+    for channel_id in channel_ids:
+        try:
+            msg = await bot.send_message(
+                chat_id=channel_id,
+                text="🛒 Для замовлення натисніть кнопку нижче 👇",
+                reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
+                    [types.InlineKeyboardButton(
+                        text="🛍 Відкрити каталог",
+                        web_app=types.WebAppInfo(url="https://barskyi.github.io/for_order.html")
+                    )]
+                ])
+            )
+            await bot.pin_chat_message(chat_id=channel_id, message_id=msg.message_id)
+            logger.info(f"✅ Повідомлення закріплене в каналі {channel_id}")
+        except Exception as e:
+            logger.error(f"⚠️ Не вдалося закріпити повідомлення в {channel_id}: {e}")
+
+    await bot.session.close()
+
+
+async def on_startup():
+    """Функція, яка виконується при старті бота"""
+    await pin_webapp_menu()

@@ -8,6 +8,7 @@ from config.settings import config
 from database.models import init_models
 from handlers.admin import management
 from handlers.user import start, catalog
+from handlers.user.start import on_startup
 from middleware.moderator import ModeratorMiddleware
 
 logging.basicConfig(
@@ -25,6 +26,10 @@ async def main():
         logger.info("Ініціалізація бази даних...")
         await init_models()
         logger.info("База даних успішно ініціалізована")
+
+        logger.info("Виконання on_startup функцій...")
+        await on_startup()
+        logger.info("on_startup функції виконано успішно")
 
         dp = Dispatcher()
 
