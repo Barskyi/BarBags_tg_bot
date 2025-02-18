@@ -19,19 +19,19 @@ logger = logging.getLogger(__name__)
 
 
 async def main():
-    # Створюємо бота за межами try-except
     bot = Bot(token=config.BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    logger.info(f"Список каналів: {config.CHANNEL_IDS}")
 
     try:
         logger.info("Ініціалізація бази даних...")
         await init_models()
         logger.info("База даних успішно ініціалізована")
 
+        dp = Dispatcher()
+
         logger.info("Виконання on_startup функцій...")
         await on_startup()
         logger.info("on_startup функції виконано успішно")
-
-        dp = Dispatcher()
 
         """Add middleware"""
         dp.message.middleware(ModeratorMiddleware())
