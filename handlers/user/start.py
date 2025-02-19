@@ -27,16 +27,27 @@ async def pin_webapp_menu():
                 logger.info(f"Спроба закріплення повідомлення в каналі {channel_id}")
                 msg = await bot.send_message(
                     chat_id=channel_id,
-                    text="📂 Головне меню:\n\n👉 @barbags_bot - каталог товарів",
+                    text=(
+                        "<b>🛍 Як оформити замовлення?</b>\n\n"
+                        "1️⃣ Оберіть товар у нашому каталозі.\n"
+                        "2️⃣ Натисніть «Написати менеджеру» для консультації.\n"
+                        "3️⃣ Узгодьте деталі та оплату.\n"
+                        "4️⃣ Очікуйте швидку доставку! 🚀\n\n"
+                        "📢 <b>Корисні посилання:</b>\n"
+                        "🔹 <a href='https://t.me/barbags_bot'>🏠 Головне меню</a>\n"
+                        "🔹 <a href='https://t.me/share/url?url=https://t.me/barbags_bot&text=👜 Магазин BarBags: стильні сумки та аксесуари!'>📤 Поділитися</a>\n\n"
+                    ),
                     parse_mode="HTML",
-                    reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
-                        [
-                            types.InlineKeyboardButton(
-                                text="✍️ Для замовлення",
-                                url="https://t.me/barska_olena"
-                            )
+                    reply_markup=types.InlineKeyboardMarkup(
+                        inline_keyboard=[
+                            [
+                                types.InlineKeyboardButton(
+                                    text="✍️ Написати менеджеру",
+                                    url="https://t.me/barska_olena"
+                                )
+                            ]
                         ]
-                    ])
+                    )
                 )
                 await bot.pin_chat_message(chat_id=channel_id, message_id=msg.message_id)
                 logger.info(f"✅ Повідомлення успішно закріплене в каналі {channel_id}")
