@@ -18,12 +18,20 @@ class Config:
     def __post_init__(self):
         """Перетворюємо CHANNEL_IDS у список чисел"""
         channel_ids_str = os.getenv("CHANNEL_IDS", "")
+        logger.info(f"📌 Отримано CHANNEL_IDS зі змінних оточення: '{channel_ids_str}'")
+
         if channel_ids_str:
-            self.CHANNEL_IDS = [int(ch_id) for ch_id in channel_ids_str.split(",") if ch_id.strip().isdigit()]
-            logger.info(f"📌 Завантажено ID каналів: {self.CHANNEL_IDS}")
+            try:
+                self.CHANNEL_IDS = [int(ch_id) for ch_id in channel_ids_str.split(",") if ch_id.strip().isdigit()]
+                logger.info(f"📌 Завантажено ID каналів: {self.CHANNEL_IDS}")
+            except Exception as e:
+                logger.error(f"❌ Помилка при перетворенні CHANNEL_IDS: {e}")
+                self.CHANNEL_IDS = []
         else:
             self.CHANNEL_IDS = []
             logger.warning("⚠️ CHANNEL_IDS не знайдено або порожній!")
+        logger.info(f"📌 Фінальне значення CHANNEL_IDS: {self.CHANNEL_IDS}")
+
 
     @property
     def database_url(self) -> str:
