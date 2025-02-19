@@ -31,7 +31,7 @@ async def pin_webapp_menu():
                     reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
                         [types.InlineKeyboardButton(
                             text=" ✍️ Написати менеджеру",
-                            url="https://t.me/barska_olenka"
+                            url="https://barskyi.github.io/for_order.html"
                         )]
                     ])
                 )
