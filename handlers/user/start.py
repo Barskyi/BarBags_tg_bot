@@ -27,12 +27,18 @@ async def pin_webapp_menu():
                 logger.info(f"Спроба закріплення повідомлення в каналі {channel_id}")
                 msg = await bot.send_message(
                     chat_id=channel_id,
-                    text="🛒 Для замовлення: ",
+                    text="🛒 Як оформити замовлення: ",
                     reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
-                        [types.InlineKeyboardButton(
-                            text=" ✍️ Написати менеджеру",
-                            url="https://barskyi.github.io/for_order.html"
-                        )]
+                        [
+                            types.InlineKeyboardButton(
+                                text="🛍 Головне меню",
+                                url="https://t.me/barbags_bot"
+                            ),
+                            types.InlineKeyboardButton(
+                                text="✍️ Для замовлення",
+                                url="https://t.me/barska_olena"
+                            )
+                        ]
                     ])
                 )
                 await bot.pin_chat_message(chat_id=channel_id, message_id=msg.message_id)
