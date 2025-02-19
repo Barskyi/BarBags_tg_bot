@@ -27,13 +27,10 @@ async def pin_webapp_menu():
                 logger.info(f"Спроба закріплення повідомлення в каналі {channel_id}")
                 msg = await bot.send_message(
                     chat_id=channel_id,
-                    text="🛒 Як оформити замовлення: ",
+                    text="📂 Головне меню:\n\n👉 @barbags_bot - каталог товарів",
+                    parse_mode="HTML",
                     reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
                         [
-                            types.InlineKeyboardButton(
-                                text="🛍 Головне меню",
-                                url="https://t.me/barbags_bot"
-                            ),
                             types.InlineKeyboardButton(
                                 text="✍️ Для замовлення",
                                 url="https://t.me/barska_olena"
