@@ -24,6 +24,7 @@ async def pin_webapp_menu():
     async with Bot(token=config.BOT_TOKEN) as bot:
         for channel_id in config.CHANNEL_IDS:
             try:
+                logger.info(f"Спроба закріплення повідомлення в каналі {channel_id}")
                 msg = await bot.send_message(
                     chat_id=channel_id,
                     text="🛒 Для замовлення натисніть кнопку нижче 👇",
@@ -35,9 +36,9 @@ async def pin_webapp_menu():
                     ])
                 )
                 await bot.pin_chat_message(chat_id=channel_id, message_id=msg.message_id)
-                logger.info(f"✅ Повідомлення закріплене в каналі {channel_id}")
+                logger.info(f"✅ Повідомлення успішно закріплене в каналі {channel_id}")
             except Exception as e:
-                logger.error(f"⚠️ Не вдалося закріпити повідомлення в {channel_id}: {e}")
+                logger.error(f"⚠️ Не вдалося закріпити повідомлення в каналі {channel_id}. Помилка: {str(e)}")
 
 
 async def on_startup():

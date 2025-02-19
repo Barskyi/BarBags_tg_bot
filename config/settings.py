@@ -13,7 +13,7 @@ load_dotenv()
 class Config:
     BOT_TOKEN: str = os.getenv('BOT_TOKEN', '')
     DATABASE_URL: str = os.getenv('DATABASE_URL', '')
-    CHANNEL_IDS: list[int] = None
+    CHANNEL_IDS: list[str] = None
 
     def __post_init__(self):
         """Перетворюємо CHANNEL_IDS у список чисел"""
@@ -22,16 +22,16 @@ class Config:
 
         if channel_ids_str:
             try:
-                self.CHANNEL_IDS = [int(ch_id) for ch_id in channel_ids_str.split(",") if ch_id.strip().isdigit()]
+                self.CHANNEL_IDS = [ch_id.strip() for ch_id in channel_ids_str.split(",") if ch_id.strip()]
                 logger.info(f"📌 Завантажено ID каналів: {self.CHANNEL_IDS}")
             except Exception as e:
-                logger.error(f"❌ Помилка при перетворенні CHANNEL_IDS: {e}")
+                logger.error(f"❌ Помилка при обробці CHANNEL_IDS: {e}")
                 self.CHANNEL_IDS = []
         else:
             self.CHANNEL_IDS = []
             logger.warning("⚠️ CHANNEL_IDS не знайдено або порожній!")
-        logger.info(f"📌 Фінальне значення CHANNEL_IDS: {self.CHANNEL_IDS}")
 
+        logger.info(f"📌 Фінальне значення CHANNEL_IDS: {self.CHANNEL_IDS}")
 
     @property
     def database_url(self) -> str:
