@@ -8,7 +8,7 @@ async def set_bot_commands(bot: Bot):
     try:
         # Створюємо лише одну команду для акцій
         default_commands = [
-            BotCommand(command="menu", description="🔥 Акції")
+            BotCommand(command="🔥 Акції", description="🔥 Акції")
         ]
 
         await bot.set_my_commands(
