@@ -1,12 +1,16 @@
 from aiogram import Bot
-from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeChat, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeChat
 from config.settings import logger
 
 
 async def set_bot_commands(bot: Bot):
+    """Встановлення команд для бота"""
     try:
         default_commands = [
-            BotCommand(command="menu", description="🔥 Акції")
+            BotCommand(command="start", description="🏠 Запустити бота"),
+            BotCommand(command="menu", description="📋 Головне меню"),
+            BotCommand(command="catalog", description="🛍 Каталог товарів"),
+            BotCommand(command="help", description="ℹ️ Допомога")
         ]
 
         await bot.set_my_commands(
@@ -19,37 +23,19 @@ async def set_bot_commands(bot: Bot):
         logger.error(f"❌ Помилка при встановленні команд бота: {e}")
 
 
-# async def set_channel_commands(bot: Bot, channel_id: str):
-#     """Встановлення команд для конкретного каналу"""
-#     try:
-#         channel_commands = [
-#             BotCommand(command="menu", description="🔥 Акції")
-#         ]
-#
-#         await bot.set_my_commands(
-#             commands=channel_commands,
-#             scope=BotCommandScopeChat(chat_id=channel_id)
-#         )
-#         logger.info(f"✅ Команди для каналу {channel_id} успішно встановлено")
-#
-#     except Exception as e:
-#         logger.error(f"❌ Помилка при встановленні команд для каналу {channel_id}: {e}")
-
-
-async def delete_all_commands(bot: Bot):
-    """Видалення всіх команд бота"""
+async def set_channel_commands(bot: Bot, channel_id: str):
+    """Встановлення команд для конкретного каналу"""
     try:
-        await bot.delete_my_commands(scope=BotCommandScopeDefault())
-        logger.info("✅ Всі команди бота успішно видалено")
+        channel_commands = [
+            BotCommand(command="catalog", description="🛍 Переглянути каталог"),
+            BotCommand(command="manager", description="✍️ Написати менеджеру")
+        ]
+
+        await bot.set_my_commands(
+            commands=channel_commands,
+            scope=BotCommandScopeChat(chat_id=channel_id)
+        )
+        logger.info(f"✅ Команди для каналу {channel_id} успішно встановлено")
+
     except Exception as e:
-        logger.error(f"❌ Помилка при видаленні команд бота: {e}")
-
-
-def get_main_keyboard():
-    """Головна клавіатура"""
-    return ReplyKeyboardMarkup(
-        keyboard=[
-            [KeyboardButton(text="🔥 Акції")],
-        ],
-        resize_keyboard=True
-    )
+        logger.error(f"❌ Помилка при встановленні команд для каналу {channel_id}: {e}")

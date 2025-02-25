@@ -1,10 +1,11 @@
 from aiogram import Router, Bot, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
+from aiogram.filters import Command
 
 from config.settings import config, logger
-from keyboards.inline import main_menu_keyboard
-from utils.commands import set_bot_commands
+from keyboards.inline import main_menu_keyboard, catalog_keyboard
+from utils.commands import set_bot_commands, set_channel_commands
 from utils.smt_texts import welcome_text
 
 router = Router()
@@ -18,6 +19,41 @@ async def start_cmd(message: Message):
         reply_markup=main_menu_keyboard(),
         parse_mode="HTML"
     )
+
+
+@router.message(Command("menu"))
+async def menu_command(message: Message):
+    """Обробка команди /menu"""
+    await message.answer(
+        text=welcome_text,
+        reply_markup=main_menu_keyboard(),
+        parse_mode="HTML"
+    )
+
+
+@router.message(Command("catalog"))
+async def catalog_command(message: Message):
+    """Обробка команди /catalog"""
+    await message.answer(
+        text="Оберіть потрібну категорію:\n👇",
+        reply_markup=catalog_keyboard()
+    )
+
+
+@router.message(Command("help"))
+async def help_command(message: Message):
+    """Обробка команди /help"""
+    help_text = """
+    🤖 <b>Доступні команди бота:</b>
+
+    /start - Запустити бота
+    /menu - Головне меню
+    /catalog - Каталог товарів
+    /help - Показати цю довідку
+
+    За додатковою допомогою звертайтесь до менеджера @barska_olena
+    """
+    await message.answer(text=help_text, parse_mode="HTML")
 
 
 async def pin_webapp_menu():
@@ -64,7 +100,7 @@ async def on_startup():
 
     bot = Bot(token=config.BOT_TOKEN)
     await set_bot_commands(bot)
-    #
-    # for channel_id in config.CHANNEL_IDS:
-    #     await set_channel_commands(bot, channel_id)
+
+    for channel_id in config.CHANNEL_IDS:
+        await set_channel_commands(bot, channel_id)
     await bot.session.close()
