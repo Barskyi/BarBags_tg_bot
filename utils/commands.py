@@ -8,7 +8,7 @@ async def set_bot_commands(bot: Bot):
     try:
         default_commands = [
             BotCommand(command="start", description="🏠 Запустити бота"),
-            BotCommand(command="menu", description="📋 Головне меню"),
+            BotCommand(command="shares", description="🎰 Акції та знижки"),
             BotCommand(command="catalog", description="🛍 Каталог товарів"),
             BotCommand(command="help", description="ℹ️ Допомога")
         ]

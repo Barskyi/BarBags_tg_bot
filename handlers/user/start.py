@@ -21,13 +21,16 @@ async def start_cmd(message: Message):
     )
 
 
-@router.message(Command("menu"))
+@router.message(Command("shares"))
 async def menu_command(message: Message):
-    """Обробка команди /menu"""
+    """Обробка команди /shares"""
+    channel_link = "https://t.me/BarBags_shop/415"
+
     await message.answer(
-        text=welcome_text,
-        reply_markup=main_menu_keyboard(),
-        parse_mode="HTML"
+        text="<b>Переходьте за посиланням, щоб переглянути наші акції та знижки:</b>\n\n"
+             f"<a href='{channel_link}'>🎰 Спеціальні пропозиції</a>",
+        parse_mode="HTML",
+        disable_web_page_preview=False
     )
 
 
