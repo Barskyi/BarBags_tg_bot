@@ -21,42 +21,6 @@ async def start_cmd(message: Message):
     )
 
 
-@router.message(Command("menu"))
-async def menu_command(message: Message):
-    """Обробка команди /menu"""
-    await message.answer(
-        text=welcome_text,
-        reply_markup=main_menu_keyboard(),
-        parse_mode="HTML"
-    )
-
-
-@router.message(Command("catalog"))
-async def catalog_command(message: Message):
-    """Обробка команди /catalog"""
-    # Тут можна використати вашу існуючу логіку показу каталогу
-    await message.answer(
-        text="Оберіть потрібну категорію:\n👇",
-        reply_markup=catalog_keyboard()
-    )
-
-
-@router.message(Command("help"))
-async def help_command(message: Message):
-    """Обробка команди /help"""
-    help_text = """
-    🤖 <b>Доступні команди бота:</b>
-
-    /start - Запустити бота
-    /menu - Головне меню
-    /catalog - Каталог товарів
-    /help - Показати цю довідку
-
-    За додатковою допомогою звертайтесь до менеджера @barska_olena
-    """
-    await message.answer(text=help_text, parse_mode="HTML")
-
-
 async def pin_webapp_menu():
     """Закріплення повідомлення з веб-додатком у каналі"""
     async with Bot(token=config.BOT_TOKEN) as bot:
