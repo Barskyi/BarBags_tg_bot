@@ -1,11 +1,10 @@
 from aiogram import Router, Bot, types
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-from aiogram.filters import Command
 
 from config.settings import config, logger
-from keyboards.inline import main_menu_keyboard, catalog_keyboard
-from utils.commands import set_bot_commands, set_channel_commands
+from keyboards.inline import main_menu_keyboard
+from utils.commands import set_bot_commands
 from utils.smt_texts import welcome_text
 
 router = Router()
@@ -65,7 +64,7 @@ async def on_startup():
 
     bot = Bot(token=config.BOT_TOKEN)
     await set_bot_commands(bot)
-
-    for channel_id in config.CHANNEL_IDS:
-        await set_channel_commands(bot, channel_id)
+    #
+    # for channel_id in config.CHANNEL_IDS:
+    #     await set_channel_commands(bot, channel_id)
     await bot.session.close()

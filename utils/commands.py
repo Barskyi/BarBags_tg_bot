@@ -1,10 +1,9 @@
 from aiogram import Bot
-from aiogram.types import BotCommand, BotCommandScopeDefault, ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeChat, ReplyKeyboardMarkup, KeyboardButton
 from config.settings import logger
 
 
 async def set_bot_commands(bot: Bot):
-    """Встановлення команд для бота"""
     try:
         default_commands = [
             BotCommand(command="menu", description="🔥 Акції")
@@ -18,6 +17,23 @@ async def set_bot_commands(bot: Bot):
 
     except Exception as e:
         logger.error(f"❌ Помилка при встановленні команд бота: {e}")
+
+
+# async def set_channel_commands(bot: Bot, channel_id: str):
+#     """Встановлення команд для конкретного каналу"""
+#     try:
+#         channel_commands = [
+#             BotCommand(command="menu", description="🔥 Акції")
+#         ]
+#
+#         await bot.set_my_commands(
+#             commands=channel_commands,
+#             scope=BotCommandScopeChat(chat_id=channel_id)
+#         )
+#         logger.info(f"✅ Команди для каналу {channel_id} успішно встановлено")
+#
+#     except Exception as e:
+#         logger.error(f"❌ Помилка при встановленні команд для каналу {channel_id}: {e}")
 
 
 async def delete_all_commands(bot: Bot):
