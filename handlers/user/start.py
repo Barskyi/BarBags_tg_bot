@@ -37,6 +37,8 @@ async def menu_command(message: Message):
 async def feedbacks_command(message: Message):
     """Обробка команди /feedback"""
     site_link = "https://barbags.com.ua/ua/testimonials"
+    photo_review_link = "https://res.cloudinary.com/dqxmd2u3s/image/upload/v1740563044/Designer_sb5wqw.jpg"
+
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
             [
@@ -47,9 +49,8 @@ async def feedbacks_command(message: Message):
             ]
         ]
     )
-    await message.answer(
-        text="<b>Відгуки наших клієнтів</b>\n\n"
-             "Натисніть кнопку нижче, щоб переглянути всі відгуки:",
+    await message.answer_photo(
+        photo=photo_review_link,
         reply_markup=keyboard,
         parse_mode="HTML"
     )
