@@ -1,6 +1,6 @@
 from aiogram import Router, Bot, types
 from aiogram.filters import CommandStart
-from aiogram.types import Message
+from aiogram.types import Message, InlineKeyboardMarkup, WebAppInfo, InlineKeyboardButton
 from aiogram.filters import Command
 
 from config.settings import config, logger
@@ -25,11 +25,33 @@ async def start_cmd(message: Message):
 async def menu_command(message: Message):
     """Обробка команди /shares"""
     channel_link = "https://t.me/BarBags_shop/415"
-    head_link = "https://t.me/BarBags_shop/415"
+    head_link = "https://t.me/BarBags_shop"
     await message.answer(
         text=f"<b>Підписуйтеся на наш <a href='{head_link}'>🎰 канал</a> щоб нічого не пропустити та переходьте за посиланням щоб переглянути наші <a href='{channel_link}'>🎰 Акції та знижки</a></b>",
         parse_mode="HTML",
         disable_web_page_preview=False
+    )
+
+
+@router.message(Command("feedback"))
+async def feedbacks_command(message: Message):
+    """Обробка команди /feedback"""
+    site_link = "https://barbags.com.ua/ua/testimonials"
+    keyboard = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="📝 Переглянути відгуки",
+                    web_app=WebAppInfo(url=site_link)
+                )
+            ]
+        ]
+    )
+    await message.answer(
+        text="<b>Відгуки наших клієнтів</b>\n\n"
+             "Натисніть кнопку нижче, щоб переглянути всі відгуки:",
+        reply_markup=keyboard,
+        parse_mode="HTML"
     )
 
 
@@ -50,10 +72,11 @@ async def help_command(message: Message):
 
     /start - Запустити бота
     /shares - Наші акції та знижки
+    /feedback - Відгуки
     /catalog - Каталог товарів
     /help - Показати цю довідку
 
-    За додатковою допомогою звертайтесь до менеджера @barska_olena
+    <b>За додатковою допомогою звертайтесь до менеджера @barska_olena </b>
     """
     await message.answer(text=help_text, parse_mode="HTML")
 
