@@ -77,15 +77,23 @@ async def catalog_command(message: Message):
 async def help_command(message: Message):
     """Обробка команди /help"""
     help_text = """
-    🤖 <b>Доступні команди бота:</b>
+    ✨ <b>ПОМІЧНИК BARBAGS</b> ✨
 
-    /start - Запустити бота
-    /shares - Наші акції та знижки
-    /feedback - Відгуки
-    /catalog - Каталог товарів
-    /help - Показати цю довідку
+    📱 <b>КОМАНДИ ДЛЯ ШВИДКОГО ДОСТУПУ:</b>
 
-    <b>За додатковою допомогою звертайтесь до менеджера @barska_olena </b>
+    🏠 /start - Головна сторінка бота
+    🎁 /shares - Гарячі акції та знижки
+    ⭐️ /feedback - Відгуки наших клієнтів
+    🛍️ /catalog - Перегляд каталогу товарів
+    ℹ️ /help - Ця довідкова інформація
+
+    ━━━━━━━━━━━━━━━━━━━━
+
+    💬 <b>ПОТРІБНА ДОПОМОГА?</b>
+    Зв'яжіться з нашим менеджером
+    👩‍💼 @barska_olena
+
+    🌟 <b>BarBags</b> - якість, яку можна відчути!
     """
     await message.answer(text=help_text, parse_mode="HTML")
 
