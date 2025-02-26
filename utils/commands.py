@@ -29,7 +29,8 @@ async def set_channel_commands(bot: Bot, channel_id: str):
     try:
         channel_commands = [
             BotCommand(command="catalog", description="🛍 Переглянути каталог"),
-            BotCommand(command="manager", description="✍️ Написати менеджеру")
+            BotCommand(command="manager", description="✍️ Написати менеджеру"),
+            BotCommand(command="feedback", description="📣 Наші відгуки")
         ]
 
         await bot.set_my_commands(
