@@ -10,6 +10,7 @@ async def set_bot_commands(bot: Bot):
             BotCommand(command="start", description="🏠 Запустити бота"),
             BotCommand(command="shares", description="🎰 Акції та знижки"),
             BotCommand(command="catalog", description="🛍 Каталог товарів"),
+            BotCommand(command="feedback", description="📣 Наші відгуки"),
             BotCommand(command="help", description="ℹ️ Допомога")
         ]
 
