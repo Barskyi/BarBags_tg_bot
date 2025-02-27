@@ -30,7 +30,7 @@ async def main():
         dp = Dispatcher()
 
         logger.info("Виконання on_startup функцій...")
-        # await on_startup()
+        await on_startup()
         logger.info("on_startup функції виконано успішно")
 
         """Add middleware"""
