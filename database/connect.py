@@ -11,7 +11,8 @@ logger.info(f"Using database URL starting with: {database_url[:15]}...")
 engine = create_async_engine(
     database_url,
     echo=False,
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    connect_args={"timeout": 30}
 )
 
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
