@@ -65,15 +65,6 @@ async def feedbacks_command(message: Message):
     )
 
 
-# @router.message(Command("catalog"))
-# async def catalog_command(message: Message):
-#     """Обробка команди /catalog"""
-#     await message.answer(
-#         text="Оберіть потрібну категорію:\n👇",
-#         reply_markup=catalog_keyboard()
-#     )
-
-
 @router.message(Command("help"))
 async def help_command(message: Message):
     """Обробка команди /help"""
