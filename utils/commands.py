@@ -9,7 +9,6 @@ async def set_bot_commands(bot: Bot):
         default_commands = [
             BotCommand(command="start", description="🏠 Запустити бота"),
             BotCommand(command="shares", description="🎰 Акції та знижки"),
-            BotCommand(command="catalog", description="🛍 Каталог товарів"),
             BotCommand(command="feedback", description="📣 Наші відгуки"),
             BotCommand(command="help", description="ℹ️ Допомога")
         ]
@@ -28,7 +27,6 @@ async def set_channel_commands(bot: Bot, channel_id: str):
     """Встановлення команд для конкретного каналу"""
     try:
         channel_commands = [
-            BotCommand(command="catalog", description="🛍 Переглянути каталог"),
             BotCommand(command="manager", description="✍️ Написати менеджеру"),
             BotCommand(command="feedback", description="📣 Наші відгуки")
         ]

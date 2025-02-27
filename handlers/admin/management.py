@@ -6,7 +6,7 @@ from utils.statistics import StatsManager
 
 router = Router()
 
-ADMIN_IDS = [564324383, 1226589584]  # Замініть на ваш Telegram ID
+ADMIN_IDS = [564324383, 1226589584]
 
 
 @router.message(Command("myid"))
