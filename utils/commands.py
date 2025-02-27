@@ -1,5 +1,5 @@
 from aiogram import Bot
-from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeAllGroupChats
+from aiogram.types import BotCommand, BotCommandScopeDefault, BotCommandScopeChat
 from config.settings import logger
 
 
@@ -32,9 +32,12 @@ async def set_channel_commands(bot: Bot, channel_id: str):
             BotCommand(command="feedback", description="📣 Наші відгуки")
         ]
 
+        base_channel_id = channel_id.split('_')[0]
+
+
         await bot.set_my_commands(
             commands=channel_commands,
-            scope=BotCommandScopeAllGroupChats(chat_id=channel_id)  # 1
+            scope=BotCommandScopeChat(chat_id=base_channel_id)  # 1
         )
         logger.info(f"✅ Команди для каналу {channel_id} успішно встановлено")
 
